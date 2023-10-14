@@ -8,7 +8,7 @@ This script is intended **ONLY for personal use** to ease the video downloading 
 
 - **DO NOT** share your Voorivex Academy credentials.
 - **DO NOT** share the downloaded videos.
-- Respect the intellectual property and terms of service of Voorivex Academy.
+- Respect the intellectual property and terms of service of [Voorivex Academy](https://voorivex.academy).
 
 
 ## Prerequisites
