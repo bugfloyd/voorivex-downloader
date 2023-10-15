@@ -2,7 +2,7 @@
 
 This script allows you to automate the process of downloading videos from Voorivex Academy. The script logs into Voorivex using credentials, fetches the BuildId, gets an access token, fetches the next token (bearer token), gets the list of available videos, requests generating download link for each video, and then downloads the video file.
 
-## ⚠️ Important Note ⚠️
+## ⚠️ Important Note
 
 This script is intended **ONLY for personal use** to ease the video downloading process after you have legitimately enrolled in a Voorivex Academy course. Please ensure you:
 
@@ -43,7 +43,10 @@ Copy the sample `.env.sample` file to create a `.env` file:
     ```bash
     cp .env.sample .env
     ```
-    Open the `.env` file and replace `VOORIVEX_USERNAME` and `PASSWORD` with your actual Voorivex Academy username and password.
+    Open the `.env` file and:
+    Replace `VOORIVEX_USERNAME` and `PASSWORD` with your actual Voorivex Academy username and password.
+    (Optional) Specify a target directory from which you want to download videos by setting the `TARGET_DIRECTORY` variable. If you leave it blank or don't include it, the script will attempt to download all the available videos. For
+    instance, you can set it as `TARGET_DIRECTORY=owasp-zero/lives` to download videos from the "owasp-zero/lives" directory.
 
 ## Running the Script
 Once you've set up your `.env` file with the right credentials, you can run the script using:  

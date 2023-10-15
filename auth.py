@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 from constants import LOGIN_API_URL, LOGIN_PAGE_URL, NEXT_TOKEN_URL
-from credentials_manager import read_credentials_from_env
+from variables_manager import read_variables_from_env
 
 def fetch_buildId():
     response_initial = requests.get(LOGIN_PAGE_URL, allow_redirects=True)
@@ -64,7 +64,9 @@ def fetch_next_token(access_token, buildId):
 
 def auth():
     # Read the credentials
-    username, password = read_credentials_from_env()
+    variables = read_variables_from_env()
+    username = variables['USERNAME']
+    password = variables['PASSWORD']
 
     # Fetch BuildId
     success, buildId = fetch_buildId()
