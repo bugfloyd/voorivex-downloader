@@ -63,7 +63,6 @@ def download_videos(bearer_token):
     if not success:
         print(videos_list)
         exit(1)
-    
     # Check if videos_list is empty
     if not videos_list:
         print("No videos found in the specified directory.")
@@ -73,6 +72,11 @@ def download_videos(bearer_token):
 
     # Loop through each file key and download the video
     for idx, file_key in enumerate(videos_list, start=1):
+        # if file_key exists, skip it
+        if os.path.exists(os.path.join('videos', file_key)):
+            print(f"File {idx} of {len(videos_list)} ({file_key}) already exists. Skipping...")
+            continue
+
         print(f"Downloading {idx} of {len(videos_list)} videos...")
 
         video_details = process_download_url(bearer_token, file_key)
