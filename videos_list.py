@@ -1,5 +1,5 @@
 import requests
-from constants import VIDEOS_LIST_URL
+import constants
 
 # Define a recursive function to extract all file keys
 def extract_file_keys(folder, target_directory=""):
@@ -19,7 +19,7 @@ def extract_file_keys(folder, target_directory=""):
 
 def get_videos_list(bearer_token, target_directory=""):
     # Fetch all the files
-    response = requests.get(f'{VIDEOS_LIST_URL}', headers={'Authorization': f"Bearer {bearer_token}"})
+    response = requests.get(f'{constants.VIDEOS_LIST_URL}', headers={'Authorization': f"Bearer {bearer_token}"})
     video_list = response.json()
     all_file_keys = []
 

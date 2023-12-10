@@ -1,6 +1,6 @@
 import requests
 import time
-from constants import GET_ACTIVE_LINK_URL, LINK_GENERATOR_URL, REMOVE_URL
+import constants
 
 def remove_previous_video(bearer_token, video_key):
     headers_remove = {
@@ -9,7 +9,7 @@ def remove_previous_video(bearer_token, video_key):
     data_remove = {
         "key": video_key
     }
-    response_remove = requests.post(REMOVE_URL, headers=headers_remove, json=data_remove)
+    response_remove = requests.post(constants.REMOVE_URL, headers=headers_remove, json=data_remove)
 
     if response_remove.status_code != 201:
         error_message = f"Removing the previous video failed with status code {response_remove.status_code}."
@@ -30,7 +30,7 @@ def request_video_generation(bearer_token, file_key):
     data_generate = {
         "key": file_key
     }
-    response_generate = requests.post(LINK_GENERATOR_URL, headers=headers_generate, json=data_generate)
+    response_generate = requests.post(constants.LINK_GENERATOR_URL, headers=headers_generate, json=data_generate)
 
     if response_generate.status_code != 201:
         error_message = f"Video generation request failed with status code {response_generate.status_code}."
@@ -58,7 +58,7 @@ def fetch_active_video_link(bearer_token, video_name):
         time.sleep(step_interval)
         elapsed_time += step_interval
 
-        response_video = requests.get(GET_ACTIVE_LINK_URL, headers=headers_video)
+        response_video = requests.get(constants.GET_ACTIVE_LINK_URL, headers=headers_video)
         if response_video.status_code != 200:
             error_message = f"{video_name}: Failed to fetch the active video link with status code {response_video.status_code}."
             try:

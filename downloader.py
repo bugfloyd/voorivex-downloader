@@ -1,8 +1,8 @@
 import requests
 import os
+import constants
 from tqdm import tqdm
 import time
-from variables_manager import read_variables_from_env
 from videos_list import get_videos_list
 from url_generator import process_download_url
 
@@ -10,8 +10,7 @@ def download_video(video_details):
     key = video_details.get("key", "")
     url = video_details.get("url", "")
     video_name = video_details.get('title', '')
-    base_dir = "videos"  # Base directory
-    target_path = os.path.join(base_dir, key)  # Construct path from 'key'
+    target_path = os.path.join(constants.SAVE_DIRECTORY, key)  # Construct path from 'key'
     target_directory = os.path.dirname(target_path)  # Get directory name without file
 
     print(f"Video Key: {key}")
@@ -52,12 +51,7 @@ def download_video(video_details):
     return True, f"Video saved to {target_path}"
 
 def download_videos(bearer_token):
-    variables = read_variables_from_env()
-    if 'TARGET_DIRECTORY' in variables and variables['TARGET_DIRECTORY'].strip() != '':
-        target_directory = variables['TARGET_DIRECTORY']
-    else:
-        # Follow another flow or set a default directory or handle error as needed.
-        target_directory = ""
+    target_directory = constants.ACADEMY_TARGET_DIRECTORY
     
     success, videos_list = get_videos_list(bearer_token, target_directory)
     if not success:
@@ -68,12 +62,15 @@ def download_videos(bearer_token):
         print("No videos found in the specified directory.")
         exit(2)
     else:
-        print(f"Found {len(videos_list)} videos in the specified directory.")
+        directory = target_directory if target_directory else "root"
+        print(f"Found {len(videos_list)} videos in {directory} directory.")
+
+    print(f"Saving videos to {constants.SAVE_DIRECTORY}")
 
     # Loop through each file key and download the video
     for idx, file_key in enumerate(videos_list, start=1):
         # if file_key exists, skip it
-        if os.path.exists(os.path.join('videos', file_key)):
+        if os.path.exists(os.path.join(constants.SAVE_DIRECTORY, file_key)):
             print(f"File {idx} of {len(videos_list)} ({file_key}) already exists. Skipping...")
             continue
 
