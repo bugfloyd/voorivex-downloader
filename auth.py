@@ -1,14 +1,15 @@
+import json
 import time
-import os
+
+import requests
+from bs4 import BeautifulSoup
+
 import constants
 
-from bs4 import BeautifulSoup
-import requests
-import json
 
 def fetch_buildId():
     response_initial = requests.get(constants.LOGIN_PAGE_URL, allow_redirects=True)
-    soup = BeautifulSoup(response_initial.text, 'html.parser')
+    soup = BeautifulSoup(response_initial.text, "html.parser")
     script_element = soup.find("script", id="__NEXT_DATA__")
     if not script_element:
         return False, "Failed to find the script element with id '__NEXT_DATA__'."
@@ -16,14 +17,12 @@ def fetch_buildId():
     script_data = json.loads(script_element.string)
     return True, script_data.get("buildId", "")
 
+
 def get_access_token(username, password):
     headers_login = {"Content-Type": "application/json"}
-    data_login = {
-        "username": username,
-        "password": password
-    }
+    data_login = {"username": username, "password": password}
     response_login = requests.post(constants.LOGIN_API_URL, headers=headers_login, json=data_login)
-    
+
     if response_login.status_code != 201:
         error_message = f"Login request failed with status code {response_login.status_code}."
         try:

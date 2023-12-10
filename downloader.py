@@ -1,15 +1,18 @@
-import requests
 import os
-import constants
-from tqdm import tqdm
 import time
-from videos_list import get_videos_list
+
+import requests
+from tqdm import tqdm
+
+import constants
 from url_generator import process_download_url
+from videos_list import get_videos_list
+
 
 def download_video(video_details):
     key = video_details.get("key", "")
     url = video_details.get("url", "")
-    video_name = video_details.get('title', '')
+    video_name = video_details.get("title", "")
     target_path = os.path.join(constants.SAVE_DIRECTORY, key)  # Construct path from 'key'
     target_directory = os.path.dirname(target_path)  # Get directory name without file
 
@@ -30,12 +33,12 @@ def download_video(video_details):
             pass  # If there's an error parsing the JSON, we'll just use the generic error message.
         return False, error_message
 
-    total_size = int(response.headers.get('content-length', 0))
+    total_size = int(response.headers.get("content-length", 0))
     block_size = 8192  # 8KB per piece
-    progress_bar = tqdm(total=total_size, unit='iB', unit_scale=True)
+    progress_bar = tqdm(total=total_size, unit="iB", unit_scale=True)
 
     try:
-        with open(target_path, 'wb') as video_file:
+        with open(target_path, "wb") as video_file:
             for chunk in response.iter_content(block_size):
                 progress_bar.update(len(chunk))
                 video_file.write(chunk)
@@ -50,9 +53,10 @@ def download_video(video_details):
 
     return True, f"Video saved to {target_path}"
 
+
 def download_videos(bearer_token):
     target_directory = constants.ACADEMY_TARGET_DIRECTORY
-    
+
     success, videos_list = get_videos_list(bearer_token, target_directory)
     if not success:
         print(videos_list)
