@@ -1,13 +1,15 @@
-import time
-from bs4 import BeautifulSoup
-import requests
 import json
-from constants import LOGIN_API_URL, LOGIN_PAGE_URL, NEXT_TOKEN_URL
-from variables_manager import read_variables_from_env
+import time
+
+import requests
+from bs4 import BeautifulSoup
+
+import constants
+
 
 def fetch_buildId():
-    response_initial = requests.get(LOGIN_PAGE_URL, allow_redirects=True)
-    soup = BeautifulSoup(response_initial.text, 'html.parser')
+    response_initial = requests.get(constants.LOGIN_PAGE_URL, allow_redirects=True)
+    soup = BeautifulSoup(response_initial.text, "html.parser")
     script_element = soup.find("script", id="__NEXT_DATA__")
     if not script_element:
         return False, "Failed to find the script element with id '__NEXT_DATA__'."
@@ -15,14 +17,12 @@ def fetch_buildId():
     script_data = json.loads(script_element.string)
     return True, script_data.get("buildId", "")
 
+
 def get_access_token(username, password):
     headers_login = {"Content-Type": "application/json"}
-    data_login = {
-        "username": username,
-        "password": password
-    }
-    response_login = requests.post(LOGIN_API_URL, headers=headers_login, json=data_login)
-    
+    data_login = {"username": username, "password": password}
+    response_login = requests.post(constants.LOGIN_API_URL, headers=headers_login, json=data_login)
+
     if response_login.status_code != 201:
         error_message = f"Login request failed with status code {response_login.status_code}."
         try:
@@ -41,7 +41,7 @@ def get_access_token(username, password):
 
 
 def fetch_next_token(access_token, buildId):
-    url_get = NEXT_TOKEN_URL.format(buildId)
+    url_get = constants.NEXT_TOKEN_URL.format(buildId)
     headers_get = {"Cookie": f"token={access_token}"}
     response_get = requests.get(url_get, headers=headers_get, allow_redirects=True)
 
@@ -63,11 +63,6 @@ def fetch_next_token(access_token, buildId):
 
 
 def auth():
-    # Read the credentials
-    variables = read_variables_from_env()
-    username = variables['USERNAME']
-    password = variables['PASSWORD']
-
     # Fetch BuildId
     success, buildId = fetch_buildId()
     if not success:
@@ -78,7 +73,7 @@ def auth():
     time.sleep(1)
 
     # Get Access Token
-    success, access_token = get_access_token(username, password)
+    success, access_token = get_access_token(constants.ACADEMY_USERNAME, constants.ACADEMY_PASSWORD)
     if not success:
         print(access_token)  # In case of failure, the access_token variable will contain the error message.
         exit(1)

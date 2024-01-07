@@ -1,15 +1,14 @@
-import requests
 import time
-from constants import GET_ACTIVE_LINK_URL, LINK_GENERATOR_URL, REMOVE_URL
+
+import requests
+
+import constants
+
 
 def remove_previous_video(bearer_token, video_key):
-    headers_remove = {
-        "Authorization": f"Bearer {bearer_token}"
-    }
-    data_remove = {
-        "key": video_key
-    }
-    response_remove = requests.post(REMOVE_URL, headers=headers_remove, json=data_remove)
+    headers_remove = {"Authorization": f"Bearer {bearer_token}"}
+    data_remove = {"key": video_key}
+    response_remove = requests.post(constants.REMOVE_URL, headers=headers_remove, json=data_remove)
 
     if response_remove.status_code != 201:
         error_message = f"Removing the previous video failed with status code {response_remove.status_code}."
@@ -24,13 +23,9 @@ def remove_previous_video(bearer_token, video_key):
 
 
 def request_video_generation(bearer_token, file_key):
-    headers_generate = {
-        "Authorization": f"Bearer {bearer_token}"
-    }
-    data_generate = {
-        "key": file_key
-    }
-    response_generate = requests.post(LINK_GENERATOR_URL, headers=headers_generate, json=data_generate)
+    headers_generate = {"Authorization": f"Bearer {bearer_token}"}
+    data_generate = {"key": file_key}
+    response_generate = requests.post(constants.LINK_GENERATOR_URL, headers=headers_generate, json=data_generate)
 
     if response_generate.status_code != 201:
         error_message = f"Video generation request failed with status code {response_generate.status_code}."
@@ -50,15 +45,13 @@ def fetch_active_video_link(bearer_token, video_name):
     elapsed_time = 0
 
     print(f"{video_name}: Checking for active download link...")
-    headers_video = {
-        "Authorization": f"Bearer {bearer_token}"
-    }
+    headers_video = {"Authorization": f"Bearer {bearer_token}"}
 
     while elapsed_time <= timeout:
         time.sleep(step_interval)
         elapsed_time += step_interval
 
-        response_video = requests.get(GET_ACTIVE_LINK_URL, headers=headers_video)
+        response_video = requests.get(constants.GET_ACTIVE_LINK_URL, headers=headers_video)
         if response_video.status_code != 200:
             error_message = f"{video_name}: Failed to fetch the active video link with status code {response_video.status_code}."
             try:
@@ -77,22 +70,23 @@ def fetch_active_video_link(bearer_token, video_name):
         if video_data.get("type") == "active" and video_data.get("videos"):
             video_details = video_data["videos"][0]
             title = video_details.get("title", "")
-            
+
             if title == video_name:
                 print(f"{video_name}: Active download link found.")
                 return True, video_details
 
     return False, f"{video_name}: Timeout reached without receiving an active video link."
 
+
 def process_download_url(bearer_token, file_key):
-    video_name = file_key.split('/')[-1]
+    video_name = file_key.split("/")[-1]
 
     # Remove previous video
     success, error_message = remove_previous_video(bearer_token, file_key)
     if not success:
         print(error_message)  # In case of failure, error_message will contain the specific error.
         exit(1)
-    
+
     time.sleep(1)
 
     # Request to generate the video download link
