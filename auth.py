@@ -21,10 +21,14 @@ def fetch_buildId():
 def get_access_token(username, password):
     headers_login = {"Content-Type": "application/json"}
     data_login = {"username": username, "password": password}
-    response_login = requests.post(constants.LOGIN_API_URL, headers=headers_login, json=data_login)
+    response_login = requests.post(
+        constants.LOGIN_API_URL, headers=headers_login, json=data_login
+    )
 
     if response_login.status_code != 201:
-        error_message = f"Login request failed with status code {response_login.status_code}."
+        error_message = (
+            f"Login request failed with status code {response_login.status_code}."
+        )
         try:
             error_details = response_login.json().get("error", "")
             error_message += f" Details: {error_details}"
@@ -73,9 +77,12 @@ def auth():
     time.sleep(1)
 
     # Get Access Token
-    success, access_token = get_access_token(constants.ACADEMY_USERNAME, constants.ACADEMY_PASSWORD)
+    success, access_token = get_access_token(
+        constants.ACADEMY_USERNAME, constants.ACADEMY_PASSWORD
+    )
     if not success:
-        print(access_token)  # In case of failure, the access_token variable will contain the error message.
+        # In case of failure, the access_token variable will contain the error message.
+        print(access_token)
         exit(1)
     print("Successfully logged in and obtained access token.")
 
@@ -84,7 +91,8 @@ def auth():
     # Fetch Next Token
     success, bearer_token = fetch_next_token(access_token, buildId)
     if not success:
-        print(bearer_token)  # In case of failure, the bearer_token variable will contain the error message.
+        # In case of failure, the bearer_token variable will contain the error message.
+        print(bearer_token)
         exit(1)
     print("Next token fetched successfully.")
 

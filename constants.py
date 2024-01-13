@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 LOGIN_PAGE_URL = "https://voorivex.academy/pages/login/"
 LOGIN_API_URL = "https://api.voorivex.academy/auth/login"
 NEXT_TOKEN_URL = "https://voorivex.academy/_next/data/{}/download.json"
@@ -18,3 +19,5 @@ ACADEMY_USERNAME = os.getenv("VOORIVEX_USERNAME")
 ACADEMY_PASSWORD = os.getenv("VOORIVEX_PASSWORD")
 ACADEMY_TARGET_DIRECTORY = os.getenv("VOORIVEX_TARGET_DIRECTORY", "")
 SAVE_DIRECTORY = os.getenv("SAVE_DIRECTORY", "videos")
+
+LOG_DL_FILE = os.getenv("LOG_DL_FILE", ".downloaded")
