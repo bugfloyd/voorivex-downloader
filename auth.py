@@ -81,9 +81,8 @@ def auth():
         constants.ACADEMY_USERNAME, constants.ACADEMY_PASSWORD
     )
     if not success:
-        print(
-            access_token
-        )  # In case of failure, the access_token variable will contain the error message.
+        # In case of failure, the access_token variable will contain the error message.
+        print(access_token)
         exit(1)
     print("Successfully logged in and obtained access token.")
 
@@ -92,9 +91,8 @@ def auth():
     # Fetch Next Token
     success, bearer_token = fetch_next_token(access_token, buildId)
     if not success:
-        print(
-            bearer_token
-        )  # In case of failure, the bearer_token variable will contain the error message.
+        # In case of failure, the bearer_token variable will contain the error message.
+        print(bearer_token)
         exit(1)
     print("Next token fetched successfully.")
 
